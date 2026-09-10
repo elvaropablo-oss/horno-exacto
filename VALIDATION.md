@@ -21,17 +21,21 @@
 
 ## Despliegue
 
-- Repositorio: pendiente de crear.
-- URL pública: pendiente de publicar.
-- SHA publicado: pendiente.
-- GitHub Actions/Pages: pendiente.
-- Comprobación pública posterior: pendiente.
-- `https://elvaropablo-oss.github.io/robots.txt`: pendiente de comprobar; no se publica un `robots.txt` ineficaz dentro de la subcarpeta.
+- Repositorio: <https://github.com/elvaropablo-oss/horno-exacto>.
+- URL pública: <https://elvaropablo-oss.github.io/horno-exacto/>.
+- SHA publicado: `f2c645353a5d65a3f4e50731dcf5a859884e3cce`.
+- GitHub Actions/Pages: [ejecución 34536561950](https://github.com/elvaropablo-oss/horno-exacto/actions/runs/34536561950), completada correctamente para ese SHA. El primer intento previo compiló bien pero no pudo desplegar porque Pages aún no estaba activado; se configuró la fuente GitHub Actions y el siguiente workflow terminó correctamente.
+- Comprobación pública posterior: portada y tres herramientas responden 200; todas las URLs del sitemap responden 200 con un H1 y canonical propia; CSS, JavaScript y favicon responden 200; Mi receta contiene `noindex,follow`; una ruta inexistente responde 404.
+- `https://elvaropablo-oss.github.io/robots.txt` responde 404. No existe una regla de robots en la raíz compartida que bloquee el proyecto y no se publica un archivo ineficaz dentro de la subcarpeta.
+- Colisión básica: `horno-exacto` estaba disponible en la cuenta y una búsqueda exacta del nombre no devolvió coincidencias evidentes. Esto no constituye una búsqueda legal de marca.
 
 ## Search Console y Analytics
 
-- Propiedad de Search Console, sitemap y solicitudes: pendientes de comprobar con acceso real después del despliegue.
-- GA4: desactivado. No se dispone todavía de un ID de flujo confirmado ni de un mecanismo de consentimiento validado.
+- Propiedad URL-prefix creada y verificada mediante la etiqueta HTML real publicada en la portada. Está registrada y visible en GSC Wizard.
+- Sitemap enviado el 10 de septiembre de 2026 a las 22:18 UTC. Search Console lo muestra pendiente, con 0 errores y 0 avisos en la última consulta.
+- Seguimiento: portada, adaptar molde, escalar receta y porcentaje panadero añadidos al tracker. La inspección API se ejecutó correctamente para las cuatro; todas constan como `URL is unknown to Google`, sin rastreo previo.
+- Solicitud manual: el intento desde Inspección de URLs devolvió «Cuota superada» y Google indicó probar al día siguiente. No existe confirmación de solicitud aceptada. Las cuatro URLs prioritarias quedan pendientes de solicitud manual cuando se reponga esa cuota; no se harán reintentos diarios sin cambios.
+- GA4: desactivado. La cuenta conectada expone propiedades existentes de CosteCoche/CuántoMaterial, pero no un flujo confirmado para HornoExacto, y esta V1 aún no incorpora un consentimiento validado. No se reutilizó ni instaló un identificador ajeno.
 
 ## Límites conocidos
 
