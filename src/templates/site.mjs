@@ -13,6 +13,7 @@ export function renderPage(page) {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${page.title}</title>
   <meta name="description" content="${page.description}">
+  ${page.path === '' ? `<meta name="google-site-verification" content="${site.googleSiteVerification}">` : ''}
   ${robots}
   <link rel="canonical" href="${canonical}">
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
