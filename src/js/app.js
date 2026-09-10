@@ -265,3 +265,19 @@ function escapeHtml(value) {
 document.addEventListener('click', (event) => {
   if (event.target.matches('[data-print]')) window.print();
 });
+
+setupAnalyticsConsent();
+
+function setupAnalyticsConsent() {
+  const banner = document.querySelector('[data-consent-banner]');
+  if (!banner) return;
+  let choice = null;
+  try { choice = localStorage.getItem('he:v1:analytics-consent'); } catch {}
+  if (!['granted', 'denied'].includes(choice)) banner.hidden = false;
+  banner.querySelectorAll('[data-consent]').forEach((button) => button.addEventListener('click', () => {
+    const consent = button.dataset.consent;
+    try { localStorage.setItem('he:v1:analytics-consent', consent); } catch {}
+    if (typeof window.gtag === 'function') window.gtag('consent', 'update', { analytics_storage: consent });
+    banner.hidden = true;
+  }));
+}

@@ -6,6 +6,9 @@ const googleAnalyticsTag = `  <!-- Google tag (gtag.js) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    let analyticsStorage = 'denied';
+    try { if (localStorage.getItem('he:v1:analytics-consent') === 'granted') analyticsStorage = 'granted'; } catch {}
+    gtag('consent', 'default', { analytics_storage: analyticsStorage, ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     gtag('js', new Date());
     gtag('config', 'G-EL1YW63SXD');
   </script>`;
@@ -45,6 +48,10 @@ ${googleAnalyticsTag}
     <p><strong>HornoExacto</strong> calcula proporciones. El resultado culinario también depende de la receta, el molde y el horno.</p>
     <nav aria-label="Información"><a href="${base}metodologia/">Metodología</a><a href="${base}sobre/">Sobre el proyecto</a><a href="${base}privacidad/">Privacidad</a></nav>
   </footer>
+  <aside class="consent-banner" data-consent-banner aria-label="Preferencias de analítica" hidden>
+    <div><strong>Analítica opcional</strong><p>Google Analytics nos ayuda a entender qué herramientas resultan útiles. Solo se activa si aceptas.</p></div>
+    <div class="consent-actions"><button class="button" type="button" data-consent="granted">Aceptar analítica</button><button class="button button--quiet" type="button" data-consent="denied">Rechazar</button></div>
+  </aside>
 </body>
 </html>`;
 }
