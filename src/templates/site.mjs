@@ -1,6 +1,14 @@
 import { site } from '../../site.config.mjs';
 
 const base = site.basePath;
+const googleAnalyticsTag = `  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EL1YW63SXD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EL1YW63SXD');
+  </script>`;
 
 export function renderPage(page) {
   const canonical = `${site.origin}${base}${page.path ? `${page.path}/` : ''}`;
@@ -9,6 +17,7 @@ export function renderPage(page) {
   return `<!doctype html>
 <html lang="es">
 <head>
+${googleAnalyticsTag}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${page.title}</title>

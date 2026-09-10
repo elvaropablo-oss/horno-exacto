@@ -6,6 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const htmlFiles = await walk(dist, '.html');
 const failures = [];
+const analyticsId = 'G-EL1YW63SXD';
 const publicPaths = new Set((await walk(dist)).map((file) => `/${path.relative(dist, file).replaceAll('\\', '/')}`));
 
 for (const file of htmlFiles) {
@@ -13,6 +14,11 @@ for (const file of htmlFiles) {
   const rel = path.relative(dist, file);
   const h1Count = (html.match(/<h1\b/g) || []).length;
   if (h1Count !== 1) failures.push(`${rel}: esperaba 1 H1 y encontré ${h1Count}`);
+  const analyticsMatches = html.match(new RegExp(analyticsId, 'g')) || [];
+  if (analyticsMatches.length !== 2) failures.push(`${rel}: esperaba una única etiqueta de Google Analytics`);
+  if (!html.includes(`<head>\n  <!-- Google tag (gtag.js) -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id=${analyticsId}"></script>`)) {
+    failures.push(`${rel}: Google Analytics no está justo después de <head>`);
+  }
   for (const tag of ['<title>', 'name="description"', 'rel="canonical"', 'application/ld+json']) {
     if (!html.includes(tag)) failures.push(`${rel}: falta ${tag}`);
   }
