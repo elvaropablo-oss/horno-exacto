@@ -33,6 +33,22 @@ export function panFactor(origin, destination) {
   return (targetCount * targetArea * targetHeight) / (sourceCount * sourceArea * sourceHeight);
 }
 
+export function convertOvenTemperature(value, unit = 'c', mode = 'conventional') {
+  const temperature = finitePositive(value, 'La temperatura');
+  if (!['c', 'f'].includes(unit)) throw new TypeError('Escala de temperatura no admitida.');
+  if (!['conventional', 'fan'].includes(mode)) throw new TypeError('Tipo de horno no admitido.');
+  const enteredCelsius = unit === 'c' ? temperature : (temperature - 32) * 5 / 9;
+  if (enteredCelsius < 60 || enteredCelsius > 300) throw new RangeError('Introduce una temperatura de horno entre 60 y 300 °C.');
+  const conventionalCelsius = mode === 'fan' ? enteredCelsius + 20 : enteredCelsius;
+  const fanCelsius = conventionalCelsius - 20;
+  return {
+    conventionalCelsius,
+    conventionalFahrenheit: conventionalCelsius * 9 / 5 + 32,
+    fanCelsius,
+    fanFahrenheit: fanCelsius * 9 / 5 + 32
+  };
+}
+
 export function scaleIngredients(ingredients, factor) {
   const validFactor = finitePositive(factor, 'El factor');
   if (!Array.isArray(ingredients) || ingredients.length === 0) {

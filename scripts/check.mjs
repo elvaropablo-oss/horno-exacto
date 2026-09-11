@@ -33,7 +33,7 @@ for (const file of htmlFiles) {
 }
 
 const sitemap = await readFile(path.join(dist, 'sitemap.xml'), 'utf8');
-for (const required of ['adaptar-molde/', 'escalar-receta/', 'porcentaje-panadero/']) {
+for (const required of ['adaptar-molde/', 'escalar-receta/', 'porcentaje-panadero/', 'convertir-temperatura-horno/']) {
   if (!sitemap.includes(required)) failures.push(`sitemap: falta ${required}`);
 }
 if (sitemap.includes('mi-receta/') || sitemap.includes('404')) failures.push('sitemap: contiene una ruta no indexable');

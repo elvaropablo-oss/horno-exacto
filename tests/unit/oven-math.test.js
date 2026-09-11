@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { bakerFromFlour, bakerFromTotal, bakerFromWeights, panArea, panFactor, parseQuantity, scaleIngredients } from '../../src/js/math/oven-math.js';
+import { bakerFromFlour, bakerFromTotal, bakerFromWeights, convertOvenTemperature, panArea, panFactor, parseQuantity, scaleIngredients } from '../../src/js/math/oven-math.js';
 
 test('calcula áreas de las tres formas permitidas', () => {
   assert.ok(Math.abs(panArea('round', { diameter: 20 }) - Math.PI * 100) < 1e-10);
@@ -17,6 +17,17 @@ test('incluye altura y número de moldes', () => {
     { shape: 'rectangle', width: 20, length: 30, height: 4, count: 1 },
     { shape: 'rectangle', width: 30, length: 40, height: 4, count: 1 }
   ), 2);
+});
+
+test('convierte temperatura convencional y ventilador', () => {
+  assert.deepEqual(convertOvenTemperature(180, 'c', 'conventional'), {
+    conventionalCelsius: 180,
+    conventionalFahrenheit: 356,
+    fanCelsius: 160,
+    fanFahrenheit: 320
+  });
+  assert.equal(convertOvenTemperature(320, 'f', 'fan').conventionalCelsius, 180);
+  assert.throws(() => convertOvenTemperature(20, 'c', 'conventional'));
 });
 
 test('escala ingredientes sin mutar la base', () => {

@@ -1,4 +1,4 @@
-import { bakerFromFlour, bakerFromTotal, bakerFromWeights, panFactor, parseQuantity, scaleIngredients } from './math/oven-math.js';
+import { bakerFromFlour, bakerFromTotal, bakerFromWeights, convertOvenTemperature, panFactor, parseQuantity, scaleIngredients } from './math/oven-math.js';
 import { announceError, clearError, formatAmount, readNumber } from './shared/format.js';
 import { deleteProject, importProject, loadDraftFactor, loadProject, saveDraftFactor, saveProject } from './shared/storage.js';
 import { downloadJson, ingredientRow, readIngredientRows } from './tools/common.js';
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (tool === 'pan') setupPanTool();
   if (tool === 'scale') setupScaleTool();
   if (tool === 'baker') setupBakerTool();
+  if (tool === 'temperature') setupTemperatureTool();
   if (tool === 'project') setupProject();
   document.querySelectorAll('[data-print]').forEach((button) => button.addEventListener('click', () => window.print()));
 });
@@ -46,6 +47,34 @@ function setupPanTool() {
         <dl class="result-details"><div><dt>Molde original</dt><dd>${formatAmount(origin.count)} unidad(es)</dd></div><div><dt>Molde final</dt><dd>${formatAmount(destination.count)} unidad(es)</dd></div></dl>
         <p class="notice">El factor ajusta cantidad y volumen ocupado. No calcula temperatura ni tiempo de horno.</p>
         <a class="button" href="${basePath}escalar-receta/#factor=${factor.toFixed(6)}">Aplicar a mis ingredientes</a>`;
+      result.hidden = false;
+      result.focus();
+    } catch (reason) {
+      result.hidden = true;
+      announceError(error, reason);
+    }
+  });
+}
+
+function setupTemperatureTool() {
+  const form = document.querySelector('#temperature-form');
+  const error = document.querySelector('#form-error');
+  const result = document.querySelector('#temperature-result');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    clearError(error);
+    try {
+      const converted = convertOvenTemperature(
+        form.elements.namedItem('temperature').value,
+        form.elements.namedItem('temperature-unit').value,
+        form.elements.namedItem('oven-mode').value
+      );
+      result.innerHTML = `
+        <p class="metric-label">Equivalencias orientativas</p>
+        <p class="big-number">${formatAmount(converted.conventionalCelsius)} °C</p>
+        <p>Horno convencional · <strong>${formatAmount(converted.conventionalFahrenheit)} °F</strong></p>
+        <dl class="result-details"><div><dt>Con ventilador</dt><dd>${formatAmount(converted.fanCelsius)} °C</dd></div><div><dt>Con ventilador</dt><dd>${formatAmount(converted.fanFahrenheit)} °F</dd></div></dl>
+        <p class="notice">La reducción de 20 °C para ventilador es una referencia general. Sigue la receta y el manual de tu horno cuando indiquen otra equivalencia.</p>`;
       result.hidden = false;
       result.focus();
     } catch (reason) {
