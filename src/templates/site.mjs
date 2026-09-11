@@ -1,16 +1,30 @@
 import { site } from '../../site.config.mjs';
 
 const base = site.basePath;
-const googleAnalyticsTag = `  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EL1YW63SXD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    let analyticsStorage = 'denied';
-    try { if (localStorage.getItem('he:v1:analytics-consent') === 'granted') analyticsStorage = 'granted'; } catch {}
-    gtag('consent', 'default', { analytics_storage: analyticsStorage, ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
-    gtag('js', new Date());
-    gtag('config', 'G-EL1YW63SXD');
+const googleAnalyticsTag = `  <script>
+  (() => {
+    const measurementId = 'G-EL1YW63SXD';
+    const storageKey = 'he:v1:analytics-consent';
+    let loaded = false;
+    const loadAnalytics = () => {
+      if (loaded || document.querySelector('script[data-site-analytics]')) return;
+      loaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId);
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
+      script.dataset.siteAnalytics = 'true';
+      document.head.append(script);
+    };
+    try { if (localStorage.getItem(storageKey) === 'granted') loadAnalytics(); } catch {}
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('[data-consent="granted"]')) loadAnalytics();
+    });
+  })();
   </script>`;
 
 export function renderPage(page) {
@@ -56,7 +70,7 @@ ${googleAnalyticsTag}
     <nav aria-label="Información"><a href="${base}recetas/">Ideas de recetas</a><a href="${base}metodologia/">Metodología</a><a href="${base}sobre/">Sobre el proyecto</a><a href="${base}privacidad/">Privacidad</a></nav>
   </footer>
   <aside class="consent-banner" data-consent-banner aria-label="Preferencias de analítica" hidden>
-    <div><strong>Analítica opcional</strong><p>Google Analytics nos ayuda a entender qué herramientas resultan útiles. Solo se activa si aceptas.</p></div>
+    <div><strong>Analítica opcional</strong><p>Google Analytics nos ayuda a entender qué herramientas resultan útiles. Solo se carga si aceptas.</p></div>
     <div class="consent-actions"><button class="button" type="button" data-consent="granted">Aceptar analítica</button><button class="button button--quiet" type="button" data-consent="denied">Rechazar</button></div>
   </aside>
 </body>
