@@ -49,6 +49,8 @@ ${googleAnalyticsTag}
   <script type="application/ld+json">${schema}</script>
   <script type="module" src="${base}assets/app.js"></script>
   <script type="module" src="${base}assets/visuals.js"></script>
+  <script type="module" src="${base}assets/consent.js"></script>
+  <script type="module" src="${base}assets/quality-fixes.js"></script>
   <script type="module" src="${base}assets/tools/recipe-ideas.js"></script>
 </head>
 <body class="page--${pageClass}"${page.tool ? ` data-tool="${page.tool}"` : ''}>
