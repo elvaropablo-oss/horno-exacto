@@ -31,6 +31,7 @@ for (const file of htmlFiles) {
   for (const script of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try { JSON.parse(script[1]); } catch { failures.push(`${rel}: JSON-LD no válido`); }
   }
+  validateInlineScripts(html, rel, failures);
 }
 
 const sitemap = await readFile(path.join(dist, 'sitemap.xml'), 'utf8');
@@ -43,7 +44,18 @@ if (failures.length) {
   console.error(failures.join('\n'));
   process.exitCode = 1;
 } else {
-  console.log(`Checked ${htmlFiles.length} HTML files, local references, JSON-LD, consent-gated analytics and sitemap.`);
+  console.log(`Checked ${htmlFiles.length} HTML files, inline JavaScript, local references, JSON-LD, consent-gated analytics and sitemap.`);
+}
+
+function validateInlineScripts(html, rel, failures) {
+  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    const attrs = match[1] || '';
+    if (/\bsrc\s*=/i.test(attrs)) continue;
+    const type = (attrs.match(/\btype=["']([^"']+)["']/i)?.[1] || '').toLowerCase();
+    if (type && !['text/javascript', 'application/javascript'].includes(type)) continue;
+    try { new Function(match[2]); }
+    catch (error) { failures.push(`${rel}: JavaScript inline no válido (${error.message})`); }
+  }
 }
 
 async function walk(directory, extension = null) {
