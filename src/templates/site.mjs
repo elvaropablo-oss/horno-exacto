@@ -15,6 +15,7 @@ const googleAnalyticsTag = `  <!-- Google tag (gtag.js) -->
 
 export function renderPage(page) {
   const canonical = `${site.origin}${base}${page.path ? `${page.path}/` : ''}`;
+  const pageClass = page.path ? page.path.replaceAll('/', '-') : 'home';
   const robots = page.noindex ? '<meta name="robots" content="noindex,follow">' : '';
   const schema = JSON.stringify(page.schema || defaultSchema(page, canonical)).replace(/</g, '\\u003c');
   return `<!doctype html>
@@ -33,14 +34,17 @@ ${googleAnalyticsTag}
   <script type="application/ld+json">${schema}</script>
   <script type="module" src="${base}assets/app.js"></script>
 </head>
-<body${page.tool ? ` data-tool="${page.tool}"` : ''}>
+<body class="page--${pageClass}"${page.tool ? ` data-tool="${page.tool}"` : ''}>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <header class="site-header">
-    <a class="brand" href="${base}" aria-label="HornoExacto, inicio"><span aria-hidden="true">◉</span> HornoExacto</a>
+    <a class="brand" href="${base}" aria-label="HornoExacto, inicio">
+      <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="17"/><circle cx="22" cy="22" r="6"/><path d="M22 2v7M42 22h-7M22 42v-7M2 22h7"/></svg>
+      <span>Horno<strong>Exacto</strong></span>
+    </a>
     <nav aria-label="Principal">
-      <a href="${base}herramientas/">Herramientas</a>
-      <a href="${base}guias/medir-moldes/">Guías</a>
-      <a href="${base}mi-receta/">Mi receta</a>
+      ${navLink('herramientas/', 'Herramientas', page.path === 'herramientas' || Boolean(page.tool && page.path !== 'mi-receta'))}
+      ${navLink('guias/medir-moldes/', 'Guías', page.path.startsWith('guias/'))}
+      ${navLink('mi-receta/', 'Mi receta', page.path === 'mi-receta')}
     </nav>
   </header>
   <main id="contenido">${page.content}</main>
@@ -87,7 +91,11 @@ export function breadcrumbs(items) {
 }
 
 export function hero(kicker, title, lead, actions = '') {
-  return `<section class="hero"><p class="eyebrow">${kicker}</p><h1>${title}</h1><p class="lead">${lead}</p>${actions ? `<div class="hero-actions">${actions}</div>` : ''}</section>`;
+  return `<section class="hero"><p class="hero-note">${kicker}</p><div class="hero-copy"><h1>${title}</h1><p class="lead">${lead}</p>${actions ? `<div class="hero-actions">${actions}</div>` : ''}</div></section>`;
 }
 
 export const linkButton = (path, label, quiet = false) => `<a class="button${quiet ? ' button--quiet' : ''}" href="${base}${path}">${label}</a>`;
+
+function navLink(path, label, active) {
+  return `<a href="${base}${path}"${active ? ' aria-current="page"' : ''}>${label}</a>`;
+}

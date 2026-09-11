@@ -40,7 +40,7 @@ function setupPanTool() {
       saveDraftFactor(factor);
       const direction = factor >= 1 ? 'multiplica' : 'reduce';
       result.innerHTML = `
-        <p class="eyebrow">Factor de adaptación</p>
+        <p class="metric-label">Factor de adaptación</p>
         <p class="big-number">× ${formatAmount(factor)}</p>
         <p>La nueva capacidad de masa ${direction} las cantidades de la receta. Por ejemplo, 250 g pasan a <strong>${formatAmount(250 * factor)} g</strong>.</p>
         <dl class="result-details"><div><dt>Molde original</dt><dd>${formatAmount(origin.count)} unidad(es)</dd></div><div><dt>Molde final</dt><dd>${formatAmount(destination.count)} unidad(es)</dd></div></dl>
@@ -233,7 +233,7 @@ function setupProject() {
   if (!project) return;
   empty.hidden = true;
   view.hidden = false;
-  view.innerHTML = `<p class="eyebrow">Guardada ${new Date(project.savedAt).toLocaleString('es-ES')}</p>${resultTable(project.ingredients, project.factor, project.title, false)}${project.total ? `<p><strong>Masa total:</strong> ${formatAmount(project.total)} g · <strong>Por pieza:</strong> ${formatAmount(project.perPiece)} g</p>` : ''}<button class="button button--quiet" data-delete>Eliminar de este dispositivo</button>`;
+  view.innerHTML = `<p class="metric-label">Guardada ${new Date(project.savedAt).toLocaleString('es-ES')}</p>${resultTable(project.ingredients, project.factor, project.title, false)}${project.total ? `<p><strong>Masa total:</strong> ${formatAmount(project.total)} g · <strong>Por pieza:</strong> ${formatAmount(project.perPiece)} g</p>` : ''}<button class="button button--quiet" data-delete>Eliminar de este dispositivo</button>`;
   view.querySelector('[data-export]').addEventListener('click', () => downloadJson('horno-exacto-mi-receta.json', project));
   view.querySelector('[data-delete]').addEventListener('click', () => { deleteProject(); location.reload(); });
 }

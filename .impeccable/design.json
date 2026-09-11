@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-11T08:20:28.8825316Z",
+  "title": "Design System: HornoExacto",
+  "extensions": {
+    "colorMeta": {
+      "tomato-measure": {"role":"primary","displayName":"Tomate de medición","canonical":"#d74724","tonalRamp":["#39100a","#691a0e","#a92d15","#d74724","#e56d50","#eea18d","#f6cfc2","#fff3ed"]},
+      "plum-ink": {"role":"neutral","displayName":"Tinta ciruela","canonical":"#241719","tonalRamp":["#241719","#3a292c","#584447","#796468","#9d898c","#c0b0b2","#e0d5d6","#f8f2f2"]},
+      "recipe-paper": {"role":"neutral","displayName":"Papel de receta","canonical":"#f2e9dc","tonalRamp":["#2d2821","#514a40","#746b5f","#998f81","#bbb1a3","#d8cfc1","#eee5d8","#fffaf2"]}
+    },
+    "typographyMeta": {
+      "display": {"displayName":"Titular editorial","purpose":"Tesis de página y cifras principales."},
+      "body": {"displayName":"Texto de trabajo","purpose":"Formularios, explicaciones y navegación."}
+    },
+    "shadows": [
+      {"name":"ambient-card","value":"0 10px 26px rgba(58,32,29,.11)","purpose":"Separar tarjetas de acceso del papel."},
+      {"name":"ambient-result","value":"0 22px 55px rgba(58,32,29,.14)","purpose":"Elevar resultados y fichas numéricas."}
+    ],
+    "motion": [
+      {"name":"measure-out","value":"cubic-bezier(.16,1,.3,1)","purpose":"Entrada de la geometría del molde y respuesta de botones."}
+    ],
+    "breakpoints": [
+      {"name":"compact","value":"620px"},
+      {"name":"stacked","value":"900px"}
+    ]
+  },
+  "components": [
+    {"name":"Primary Button","kind":"button","refersTo":"button-primary","description":"Acción principal compacta y táctil.","html":"<button class=\"ds-button-primary\">Calcular factor</button>","css":".ds-button-primary{background:#241719;color:#fffaf2;padding:.72rem 1.1rem;border:1px solid #241719;border-radius:.55rem;font:700 .9rem 'DM Sans',sans-serif;transition:transform 180ms cubic-bezier(.16,1,.3,1),background 180ms}.ds-button-primary:hover{background:#a92d15;transform:translateY(-2px)}.ds-button-primary:active{transform:translateY(1px) scale(.985)}.ds-button-primary:focus-visible{outline:3px solid #d74724;outline-offset:3px}"},
+    {"name":"Quiet Button","kind":"button","refersTo":"button-quiet","description":"Acción secundaria sobre el papel.","html":"<button class=\"ds-button-quiet\">Cargar ejemplo</button>","css":".ds-button-quiet{background:transparent;color:#241719;padding:.72rem 1.1rem;border:1px solid #241719;border-radius:.55rem;font:700 .9rem 'DM Sans',sans-serif}.ds-button-quiet:hover{background:#a92d15;color:#fffaf2;border-color:#a92d15}.ds-button-quiet:focus-visible{outline:3px solid #d74724;outline-offset:3px}"},
+    {"name":"Measured Input","kind":"input","refersTo":"input","description":"Campo claro para medidas y cantidades.","html":"<label class=\"ds-field\">Diámetro interior <span>cm</span><input value=\"24\"></label>","css":".ds-field{display:grid;gap:.4rem;color:#241719;font:700 .92rem 'DM Sans',sans-serif}.ds-field span{color:#6f5b57;font-size:.83rem}.ds-field input{min-height:3.1rem;padding:.72rem .8rem;border:1px solid #a9927f;border-radius:.4rem;background:#fffaf2;color:#241719;font:inherit}.ds-field input:focus{border-color:#d74724;box-shadow:0 0 0 .2rem rgba(215,71,36,.13);outline:none}"},
+    {"name":"Result Panel","kind":"card","refersTo":"result-card","description":"Resultado oscuro con jerarquía numérica.","html":"<section class=\"ds-result\"><small>FACTOR DE ADAPTACIÓN</small><strong>× 1,44</strong><p>250 g pasan a 360 g.</p></section>","css":".ds-result{padding:2rem;border-radius:1rem;background:#241719;color:#fffaf2;box-shadow:0 22px 55px rgba(58,32,29,.14);font-family:'DM Sans',sans-serif}.ds-result small{font-weight:700;letter-spacing:.08em}.ds-result strong{display:block;margin:.5rem 0;font:750 4rem/.9 'Fraunces',serif;font-variant-numeric:tabular-nums}"},
+    {"name":"Active Navigation","kind":"nav","refersTo":"navigation","description":"Navegación textual con regla activa.","html":"<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Herramientas</a><a href=\"#\">Guías</a></nav>","css":".ds-nav{display:flex;gap:1.4rem;font:650 .9rem 'DM Sans',sans-serif}.ds-nav a{padding:.55rem 0;color:#241719;text-decoration:none}.ds-nav a[aria-current=page]{border-bottom:2px solid #d74724}.ds-nav a:focus-visible{outline:3px solid #d74724;outline-offset:3px}"}
+  ],
+  "narrative": {
+    "northStar": "El cuaderno de obrador de precisión",
+    "overview": "Una mesa de formulación culinaria cálida, tangible y exacta. La jerarquía editorial, las marcas de medición y la geometría de los moldes hacen reconocible la herramienta sin competir con el cálculo.",
+    "keyCharacteristics": ["Papel cálido, tinta oscura y un único acento tomate.","Titulares editoriales y números tabulares.","Geometría de moldes como firma visual funcional.","Formularios sobrios y resultados de alto contraste."],
+    "rules": [
+      {"name":"The One Accent Rule","body":"El tomate es el único acento cromático; su escasez hace visibles los controles importantes.","section":"colors"},
+      {"name":"The Measured Number Rule","body":"Los factores, cantidades y tablas usan cifras tabulares y una jerarquía mayor que sus etiquetas.","section":"typography"},
+      {"name":"The Work Surface Rule","body":"Un borde define una superficie de entrada y una sombra define una pieza elevada.","section":"elevation"}
+    ],
+    "dos": ["Do usar la geometría cuando explique una forma, medida o resultado.","Do mantener el cálculo y su unidad juntos y con cifras tabulares.","Do reservar espacio amplio entre la explicación y la tarea."],
+    "donts": ["Don't repetir tres tarjetas idénticas ni centrar todos los bloques.","Don't añadir nuevos colores de acento, degradados tecnológicos o iconos decorativos.","Don't ocultar límites de cálculo ni reducir el contraste de los resultados."]
+  }
+}

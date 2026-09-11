@@ -10,8 +10,8 @@ const dist = path.join(root, 'dist');
 await rm(dist, { recursive: true, force: true });
 await mkdir(path.join(dist, 'assets'), { recursive: true });
 await cp(path.join(root, 'src/js'), path.join(dist, 'assets'), { recursive: true });
+await cp(path.join(root, 'src/assets'), path.join(dist, 'assets'), { recursive: true });
 await cp(path.join(root, 'src/styles/site.css'), path.join(dist, 'assets/site.css'));
-await cp(path.join(root, 'src/assets/favicon.svg'), path.join(dist, 'assets/favicon.svg'));
 
 for (const page of pages) {
   const destination = page.output
