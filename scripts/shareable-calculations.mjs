@@ -1,5 +1,8 @@
 export function applyShareableCalculations(html, formIds) {
   const allowed = JSON.stringify(formIds).replace(/</g, '\\u003c');
+  const style = `  <style data-result-actions>
+.result-standard-actions{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1rem;align-items:center}.result-standard-actions .project-save-button{margin-top:0}@media print{.result-standard-actions,.project-save-button,.project-library-launcher{display:none!important}}
+  </style>`;
   const script = `  <script data-shareable-calculations>
 (() => {
   const allowed = new Set(${allowed});
@@ -62,38 +65,79 @@ export function applyShareableCalculations(html, formIds) {
     url.searchParams.set(param, JSON.stringify(encode(form)));
     history.replaceState(null, '', url);
   };
-  const copyButton = (form) => {
-    const resultId = form.id.replace(/-form$/, '-result');
-    const result = document.getElementById(resultId);
-    if (!result || result.hidden || result.querySelector('[data-copy-calc-link]')) return;
+  const copyText = async (text) => {
+    if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.append(field);
+    field.select();
+    document.execCommand('copy');
+    field.remove();
+  };
+  const resultText = (result) => {
+    const clone = result.cloneNode(true);
+    clone.querySelectorAll('button,a,.result-standard-actions,[data-save-project],script,style').forEach((element) => element.remove());
+    const text = (clone.textContent || '').replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
+    const title = (document.querySelector('h1')?.textContent || document.title || 'Resultado').trim();
+    return title + '\n\n' + text + '\n\n' + location.href;
+  };
+  const flash = (button, text, wait = 1600) => {
+    const previous = button.textContent;
+    button.textContent = text;
+    setTimeout(() => { button.textContent = previous; }, wait);
+  };
+  const addButton = (actions, key, label, handler) => {
+    if (actions.querySelector('[data-result-action="' + key + '"]')) return;
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'button button--quiet';
-    button.dataset.copyCalcLink = '';
-    button.textContent = 'Copiar enlace a este cálculo';
-    button.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(location.href);
-      } catch {
-        const field = document.createElement('textarea');
-        field.value = location.href;
-        field.style.position = 'fixed';
-        field.style.opacity = '0';
-        document.body.append(field);
-        field.select();
-        document.execCommand('copy');
-        field.remove();
-      }
-      button.textContent = 'Enlace copiado';
-      setTimeout(() => { button.textContent = 'Copiar enlace a este cálculo'; }, 1800);
+    button.dataset.resultAction = key;
+    button.textContent = label;
+    button.addEventListener('click', handler);
+    actions.append(button);
+  };
+  const ensureActions = (form) => {
+    const resultId = form.id.replace(/-form$/, '-result');
+    const result = document.getElementById(resultId);
+    if (!result || result.hidden) return;
+    result.querySelectorAll('[data-copy-calc-link]').forEach((element) => element.remove());
+    let actions = result.querySelector('.result-standard-actions');
+    if (!actions) {
+      actions = document.createElement('div');
+      actions.className = 'result-standard-actions';
+      actions.setAttribute('aria-label', 'Acciones del resultado');
+      result.append(actions);
+    }
+    addButton(actions, 'copy-result', 'Copiar resultado', async (event) => {
+      try { await copyText(resultText(result)); flash(event.currentTarget, 'Resultado copiado'); } catch { flash(event.currentTarget, 'No se pudo copiar'); }
     });
-    result.append(button);
+    addButton(actions, 'copy-link', 'Copiar enlace', async (event) => {
+      writeUrl(form);
+      try { await copyText(location.href); flash(event.currentTarget, 'Enlace copiado'); } catch { flash(event.currentTarget, 'No se pudo copiar'); }
+    });
+    addButton(actions, 'share', 'Compartir', async (event) => {
+      writeUrl(form);
+      const title = (document.querySelector('h1')?.textContent || document.title || 'Cálculo').trim();
+      try {
+        if (navigator.share) await navigator.share({ title, text: 'Resultado calculado', url: location.href });
+        else { await copyText(location.href); flash(event.currentTarget, 'Enlace copiado'); }
+      } catch (error) {
+        if (error?.name !== 'AbortError') flash(event.currentTarget, 'No se pudo compartir');
+      }
+    });
+    addButton(actions, 'print', 'Imprimir / PDF', () => window.print());
+    setTimeout(() => {
+      const save = result.querySelector('[data-save-project]');
+      if (save && save.parentElement !== actions) actions.append(save);
+    }, 40);
   };
   document.addEventListener('submit', (event) => {
     const form = event.target;
     if (!eligible(form)) return;
     writeUrl(form);
-    setTimeout(() => copyButton(form), 0);
+    setTimeout(() => ensureActions(form), 0);
   }, true);
   window.addEventListener('load', () => {
     const raw = new URL(location.href).searchParams.get(param);
@@ -120,5 +164,5 @@ export function applyShareableCalculations(html, formIds) {
   });
 })();
   </script>`;
-  return html.replace('</body>', `${script}\n</body>`);
+  return html.replace('</head>', `${style}\n</head>`).replace('</body>', `${script}\n</body>`);
 }
