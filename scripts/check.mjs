@@ -15,10 +15,11 @@ for (const file of htmlFiles) {
   const h1Count = (html.match(/<h1\b/g) || []).length;
   if (h1Count !== 1) failures.push(`${rel}: esperaba 1 H1 y encontré ${h1Count}`);
   const analyticsMatches = html.match(new RegExp(analyticsId, 'g')) || [];
-  if (analyticsMatches.length !== 2) failures.push(`${rel}: esperaba una única etiqueta de Google Analytics`);
-  if (!html.includes(`<head>\n  <!-- Google tag (gtag.js) -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id=${analyticsId}"></script>`)) {
-    failures.push(`${rel}: Google Analytics no está justo después de <head>`);
-  }
+  if (analyticsMatches.length !== 1) failures.push(`${rel}: esperaba una única configuración de Google Analytics`);
+  if (!html.includes("const storageKey = 'he:v1:analytics-consent'")) failures.push(`${rel}: falta la preferencia de consentimiento de analítica`);
+  if (!html.includes("script.src = 'https://www.googletagmanager.com/gtag/js?id='")) failures.push(`${rel}: falta la carga condicional de Google Analytics`);
+  if (html.includes(`<script async src="https://www.googletagmanager.com/gtag/js?id=${analyticsId}"></script>`)) failures.push(`${rel}: Google Analytics se carga antes del consentimiento`);
+  if (!html.includes('data-consent-banner')) failures.push(`${rel}: falta el panel de consentimiento`);
   for (const tag of ['<title>', 'name="description"', 'rel="canonical"', 'application/ld+json']) {
     if (!html.includes(tag)) failures.push(`${rel}: falta ${tag}`);
   }
@@ -42,7 +43,7 @@ if (failures.length) {
   console.error(failures.join('\n'));
   process.exitCode = 1;
 } else {
-  console.log(`Checked ${htmlFiles.length} HTML files, local references, JSON-LD and sitemap.`);
+  console.log(`Checked ${htmlFiles.length} HTML files, local references, JSON-LD, consent-gated analytics and sitemap.`);
 }
 
 async function walk(directory, extension = null) {
