@@ -30,7 +30,7 @@ const googleAnalyticsTag = `  <script>
 export function renderPage(page) {
   const canonical = `${site.origin}${base}${page.path ? `${page.path}/` : ''}`;
   const pageClass = page.path ? page.path.replaceAll('/', '-') : 'home';
-  const robots = page.noindex ? '<meta name="robots" content="noindex,follow">' : '';
+  const robots = page.noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large';
   const schema = JSON.stringify(page.schema || defaultSchema(page, canonical)).replace(/</g, '\\u003c');
   return `<!doctype html>
 <html lang="es">
@@ -41,8 +41,17 @@ ${googleAnalyticsTag}
   <title>${page.title}</title>
   <meta name="description" content="${page.description}">
   ${page.path === '' ? `<meta name="google-site-verification" content="${site.googleSiteVerification}">` : ''}
-  ${robots}
+  <meta name="robots" content="${robots}">
   <link rel="canonical" href="${canonical}">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="${site.name}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${page.title}">
+  <meta property="og:description" content="${page.description}">
+  <meta property="og:url" content="${canonical}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${page.title}">
+  <meta name="twitter:description" content="${page.description}">
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="${base}assets/site.css">
   <link rel="stylesheet" href="${base}assets/recipes.css">
@@ -91,6 +100,8 @@ function defaultSchema(page, canonical) {
   if (page.tool) {
     data.applicationCategory = 'UtilitiesApplication';
     data.operatingSystem = 'Cualquier navegador moderno';
+    data.isAccessibleForFree = true;
+    data.browserRequirements = 'Navegador web moderno con JavaScript';
     data.offers = { '@type': 'Offer', price: '0', priceCurrency: 'EUR' };
   }
   const crumbs = [{ name: 'Inicio', item: `${site.origin}${base}` }];
