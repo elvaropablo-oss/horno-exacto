@@ -5,10 +5,12 @@ import { pages } from '../src/pages/pages.mjs';
 import { recipePages } from '../src/pages/recipes.mjs';
 import { renderPage } from '../src/templates/site.mjs';
 import { site } from '../site.config.mjs';
+import { applyShareableCalculations } from './shareable-calculations.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const allPages = [...pages, ...recipePages];
+const shareableForms = ['pan-form', 'scale-form', 'baker-form', 'temperature-form'];
 await rm(dist, { recursive: true, force: true });
 await mkdir(path.join(dist, 'assets'), { recursive: true });
 await cp(path.join(root, 'src/js'), path.join(dist, 'assets'), { recursive: true });
@@ -20,7 +22,8 @@ for (const page of allPages) {
     ? path.join(dist, page.output)
     : page.path ? path.join(dist, page.path, 'index.html') : path.join(dist, 'index.html');
   await mkdir(path.dirname(destination), { recursive: true });
-  await writeFile(destination, renderPage(page), 'utf8');
+  const html = applyShareableCalculations(renderPage(page), shareableForms);
+  await writeFile(destination, html, 'utf8');
 }
 
 const urls = allPages
