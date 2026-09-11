@@ -31,8 +31,10 @@ ${googleAnalyticsTag}
   <link rel="canonical" href="${canonical}">
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="${base}assets/site.css">
+  <link rel="stylesheet" href="${base}assets/recipes.css">
   <script type="application/ld+json">${schema}</script>
   <script type="module" src="${base}assets/app.js"></script>
+  <script type="module" src="${base}assets/tools/recipe-ideas.js"></script>
 </head>
 <body class="page--${pageClass}"${page.tool ? ` data-tool="${page.tool}"` : ''}>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -42,7 +44,8 @@ ${googleAnalyticsTag}
       <span>Horno<strong>Exacto</strong></span>
     </a>
     <nav aria-label="Principal">
-      ${navLink('herramientas/', 'Herramientas', page.path === 'herramientas' || Boolean(page.tool && page.path !== 'mi-receta'))}
+      ${navLink('herramientas/', 'Herramientas', page.path === 'herramientas' || Boolean(page.tool && !['mi-receta', 'recetas'].includes(page.path)))}
+      ${navLink('recetas/', 'Recetas', page.path === 'recetas')}
       ${navLink('guias/medir-moldes/', 'Guías', page.path.startsWith('guias/'))}
       ${navLink('mi-receta/', 'Mi receta', page.path === 'mi-receta')}
     </nav>
@@ -50,7 +53,7 @@ ${googleAnalyticsTag}
   <main id="contenido">${page.content}</main>
   <footer class="site-footer">
     <p><strong>HornoExacto</strong> calcula proporciones. El resultado culinario también depende de la receta, el molde y el horno.</p>
-    <nav aria-label="Información"><a href="${base}metodologia/">Metodología</a><a href="${base}sobre/">Sobre el proyecto</a><a href="${base}privacidad/">Privacidad</a></nav>
+    <nav aria-label="Información"><a href="${base}recetas/">Ideas de recetas</a><a href="${base}metodologia/">Metodología</a><a href="${base}sobre/">Sobre el proyecto</a><a href="${base}privacidad/">Privacidad</a></nav>
   </footer>
   <aside class="consent-banner" data-consent-banner aria-label="Preferencias de analítica" hidden>
     <div><strong>Analítica opcional</strong><p>Google Analytics nos ayuda a entender qué herramientas resultan útiles. Solo se activa si aceptas.</p></div>
