@@ -16,7 +16,7 @@ Los identificadores son candidatos de programa y no indican aprobación.
 ## Datos necesarios antes de publicar un enlace de afiliado
 
 1. Aprobación del programa para HornoExacto en AWIN.
-2. Enlace de seguimiento real generado por AWIN: Publisher ID **3087889**, `awinmid` del comerciante aprobado y destino de la ficha exacta.
+2. Enlace de seguimiento real generado por AWIN para el comerciante aprobado y el destino de la ficha exacta. El Publisher ID y otros identificadores de cuenta no se publican en el frontend ni en esta documentación.
 3. Registro editorial del producto: nombre, tienda, URL normal, especificaciones que coinciden con el cálculo y fecha de verificación.
 
 Hasta entonces, no se renderiza ningún módulo vacío. Cuando haya una ficha válida, el enlace normal se conservará como alternativa y el de AWIN llevará `rel="sponsored noopener noreferrer"`. La comisión tendrá peso cero en cualquier comparación.
