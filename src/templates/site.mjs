@@ -6,7 +6,13 @@ const googleAnalyticsTag = `  <script>
     const measurementId = 'G-EL1YW63SXD';
     const storageKey = 'he:v1:analytics-consent';
     let loaded = false;
+    try { window['ga-disable-' + measurementId] = localStorage.getItem(storageKey) !== 'granted'; } catch { window['ga-disable-' + measurementId] = true; }
+    const updateConsent = (granted) => {
+      window['ga-disable-' + measurementId] = !granted;
+      if (typeof window.gtag === 'function') window.gtag('consent', 'update', { analytics_storage: granted ? 'granted' : 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+    };
     const loadAnalytics = () => {
+      updateConsent(true);
       if (loaded || document.querySelector('script[data-site-analytics]')) return;
       loaded = true;
       window.dataLayer = window.dataLayer || [];
@@ -23,6 +29,7 @@ const googleAnalyticsTag = `  <script>
     try { if (localStorage.getItem(storageKey) === 'granted') loadAnalytics(); } catch {}
     document.addEventListener('click', (event) => {
       if (event.target.closest('[data-consent="granted"]')) loadAnalytics();
+      else if (event.target.closest('[data-consent="denied"]')) updateConsent(false);
     });
   })();
   </script>`;
