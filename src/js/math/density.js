@@ -1,3 +1,8 @@
+// Preserve the actual numeric density in the explanation, including custom values.
+export function formatDensity(density) {
+  return String(Number(density)).replace('.', ',');
+}
+
 export function gramsToMl(grams, density) {
   const g = Number(grams);
   const d = Number(density);

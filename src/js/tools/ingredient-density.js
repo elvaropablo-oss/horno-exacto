@@ -1,5 +1,5 @@
 import { ingredientDensities, densityById } from '../data/ingredient-densities.js';
-import { gramsToMl, mlToGrams } from '../math/density.js';
+import { gramsToMl, mlToGrams, formatDensity } from '../math/density.js';
 
 const number = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 });
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ingredientName = selected?.name || 'Ingrediente personalizado';
     const note = selected?.note || 'La precisión depende de la densidad que hayas introducido.';
 
-    result.innerHTML = `<p class="metric-label">${ingredientName}</p><p class="big-number">${number.format(converted)} ${toUnit}</p><p>${number.format(value)} ${fromUnit} ÷/× ${number.format(density)} g/ml.</p><p class="notice">${note} Para repostería precisa, una báscula suele ser más fiable que convertir ingredientes secos por volumen.</p>`;
+    result.innerHTML = `<p class="metric-label">${ingredientName}</p><p class="big-number">${number.format(converted)} ${toUnit}</p><p>${number.format(value)} ${fromUnit} ${toMl ? '÷' : '×'} ${formatDensity(density)} g/ml.</p><p class="notice">${note} Para repostería precisa, una báscula suele ser más fiable que convertir ingredientes secos por volumen.</p>`;
     result.hidden = false;
     result.focus();
   };
