@@ -1,6 +1,7 @@
 import { site } from '../../site.config.mjs';
 
 const base = site.basePath;
+const assetVersion = '20260912-2';
 const googleAnalyticsTag = `  <script>
   (() => {
     const measurementId = 'G-EL1YW63SXD';
@@ -60,14 +61,15 @@ ${googleAnalyticsTag}
   <meta name="twitter:title" content="${page.title}">
   <meta name="twitter:description" content="${page.description}">
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="${base}assets/site.css">
-  <link rel="stylesheet" href="${base}assets/recipes.css">
+  <link rel="stylesheet" href="${base}assets/site.css?v=${assetVersion}">
+  <link rel="stylesheet" href="${base}assets/recipes.css?v=${assetVersion}">
   <script type="application/ld+json">${schema}</script>
-  <script type="module" src="${base}assets/app.js"></script>
-  <script type="module" src="${base}assets/visuals.js"></script>
-  <script type="module" src="${base}assets/consent.js"></script>
-  <script type="module" src="${base}assets/quality-fixes.js"></script>
-  <script type="module" src="${base}assets/tools/recipe-ideas.js"></script>
+  <script type="module" src="${base}assets/app.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/visuals.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/consent.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/quality-fixes.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/tools/recipe-ideas.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/tools/ingredient-density.js?v=${assetVersion}"></script>
 </head>
 <body class="page--${pageClass}"${page.tool ? ` data-tool="${page.tool}"` : ''}>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -77,8 +79,8 @@ ${googleAnalyticsTag}
       <span>Horno<strong>Exacto</strong></span>
     </a>
     <nav aria-label="Principal">
-      ${navLink('herramientas/', 'Herramientas', page.path === 'herramientas' || Boolean(page.tool && !['mi-receta', 'recetas'].includes(page.path)))}
-      ${navLink('recetas/', 'Recetas', page.path === 'recetas')}
+      ${navLink('herramientas/', 'Herramientas', page.path === 'herramientas' || Boolean(page.tool && page.path !== 'recetas'))}
+      ${navLink('recetas/', 'Recetas', page.path === 'recetas' || page.path.startsWith('recetas/'))}
       ${navLink('guias/medir-moldes/', 'Guías', page.path.startsWith('guias/'))}
       ${navLink('mi-receta/', 'Mi receta', page.path === 'mi-receta')}
     </nav>
@@ -86,7 +88,7 @@ ${googleAnalyticsTag}
   <main id="contenido">${page.content}</main>
   <footer class="site-footer">
     <p><strong>HornoExacto</strong> calcula proporciones. El resultado culinario también depende de la receta, el molde y el horno.</p>
-    <nav aria-label="Información"><a href="${base}recetas/">Ideas de recetas</a><a href="${base}metodologia/">Metodología</a><a href="${base}sobre/">Sobre el proyecto</a><a href="${base}privacidad/">Privacidad</a></nav>
+    <nav aria-label="Información"><a href="${base}recetas/">Recetas escalables</a><a href="${base}gramos-a-ml/">Gramos ↔ ml</a><a href="${base}metodologia/">Metodología</a><a href="${base}sobre/">Sobre el proyecto</a><a href="${base}privacidad/">Privacidad</a></nav>
   </footer>
   <aside class="consent-banner" data-consent-banner aria-label="Preferencias de analítica" hidden>
     <div><strong>Analítica opcional</strong><p>Google Analytics nos ayuda a entender qué herramientas resultan útiles. Solo se carga si aceptas.</p></div>
