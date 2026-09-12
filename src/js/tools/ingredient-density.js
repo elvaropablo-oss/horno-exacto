@@ -1,5 +1,5 @@
 import { ingredientDensities, densityById } from '../data/ingredient-densities.js';
-import { gramsToMl, mlToGrams, formatDensity } from '../math/density.js';
+import { gramsToMl, mlToGrams, formatDensity } from '../math/density.js?v=20260912-audit1';
 
 const number = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 });
 

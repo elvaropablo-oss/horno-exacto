@@ -1,7 +1,7 @@
 import { site } from '../../site.config.mjs';
 
 const base = site.basePath;
-const assetVersion = '20260912-2';
+const assetVersion = '20260912-audit1';
 const googleAnalyticsTag = `  <script>
   (() => {
     const measurementId = 'G-EL1YW63SXD';
