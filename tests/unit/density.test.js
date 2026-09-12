@@ -9,8 +9,8 @@ test('water converts 100 g to 100 ml', () => {
 
 test('oil uses its own density instead of assuming 1 g = 1 ml', () => {
   const density = densityById('olive-oil').density;
-  assert.ok(Math.abs(gramsToMl(91, density) - 100) < 1e-9);
-  assert.ok(Math.abs(mlToGrams(100, density) - 91) < 1e-9);
+  assert.ok(Math.abs(gramsToMl(91.8, density) - 100) < 1e-9);
+  assert.ok(Math.abs(mlToGrams(100, density) - 91.8) < 1e-9);
 });
 
 test('invalid densities and negative amounts are rejected', () => {
